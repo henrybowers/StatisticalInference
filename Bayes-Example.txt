@@ -1,0 +1,27 @@
+x <- 1:4
+p <- x/sum(x)
+temp <- rbind(x, p)
+rownames(temp) <- c("X", "Prob")
+temp
+
+ “When the subjects using the test were women who collected and tested their own samples, the overall sensitivity was 75%. Specificity was also low, in the range 52% to 75%.” Assume the lower value for the specificity. Suppose a subject has a positive test and that 30% of women taking pregnancy tests are actually pregnant. What number is closest to the probability of pregnancy given the positive test?
+ 
+ sensitivty = 0.75 = P(test is positive | pregnant)
+ specificity = 0.52 =P(test is negative | not pregnant)
+ 
+ P(pregnant) = 0.3
+ 
+ P(pregnant | test is positive) = P(positive | pregnant) * P(pregnant) / P(positive | pregnant)* P(pregnant) / P(positive | not pregnant) * P(not pregnant)
+ 
+ P(positive | not pregnant) = 1 - P(negative | not pregnant) = 1 - specificity
+ 
+ P(pregnant | test is positive) = sensitivity * P(pregnant) / (sensitivity*P(pregnant) + (1-specificity)*P(not pregnant)
+ = 0.75*0.3/(0.75*0.3 + (1-0.52)*(1-0.3))
+ 
+ Diagnostic Likelihood Ratio = P(test is positive | pregnant) / P(test is positive | not pregnant)
+ 
+ 
+ 
+ 
+ 
+ 
