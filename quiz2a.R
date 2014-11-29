@@ -54,7 +54,19 @@ pbinom(3, size = 5, prob = 0.5, lower.tail = FALSE)
 # mean of 15 (sleep events per hour) and a standard deviation of 10. They are not normally distributed.
 # Give your best estimate of the probability that a sample mean RDI of 100 people is between 14 and 16
 # events per hour?
-0.68
+correctAnswer <- 0.68
+
+samplSD <- 10/sqrt(100)
+
+confidence95 <- 15 + 2*10/sqrt(100)
+
+
+#(mean(x) + c(-1, 1) * qnorm(0.975) * sd(x)/sqrt(length(x)))
+ 
+15 + c(-1,1) * qnorm(0.75) * 10/sqrt(100)
+
+# SD*SQRT((N-1)/CHIINV((alpha/2), N-1))
+alpha <- 
 
 #install.packages('truncnorm')
 library(truncnorm)

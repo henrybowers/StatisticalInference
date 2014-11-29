@@ -1,0 +1,85 @@
+---
+title: "Effect of Supplement Type on Tooth Growth in Guinea Pigs"
+author: "Henry Bowers"
+date: "Sunday, November 23, 2014"
+output: word_document
+---
+
+This study compares the relative effectiveness of orange juice and ascorbic acid on tooth growth in guinea pigs. The analysis uses the ToothGrowth data set, which. as described in its documentation, provides the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods (orange juice or ascorbic acid).
+
+The analysis assumes that each distribution being analyzed has the following characteristics:
+* mound-shaped
+* roughly symmetric about its mean
+* unequal variance relative to the others
+
+### Exploration of the Data Set
+The ToothGrowth provides the responses for all supplements and all dose levels in the same data set.
+
+```{r}
+data(ToothGrowth)
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+summary(ToothGrowth)
+```
+
+To address the hypothesis under test, we group the ToothGrowth data set by supplement and dose level. The distribution for each group is illustrated in the chart below.  
+
+```{r}
+library(ggplot2)
+plot<-ggplot(ToothGrowth,aes(x=supp,y=len))
+plot+geom_point(size=3,aes(color=supp))+facet_grid(~dose,labeller=label_both)+labs(title="Dist of Tooth Length by Supplement Type, Dose Level")+theme(legend.position="none")+xlab("Supplement Type")+ylab("Tooth Length")+theme(text = element_text(size=10))
+```
+  
+Next we calculate the mean and standard deviation for each of these groups:
+```{r}
+library(plyr)
+TGstats <- ddply(ToothGrowth,.(supp,dose),summarise, mean = mean(len), sd = sd(len))
+TGstats
+```
+
+### Analysis and Results
+For each dose level in the data set, which of the two supplements is more effective in promoting tooth growth? To answer this question we look at the 95% t confidence intervals of the difference in means of each supplement at each dose level.
+
+#### Dose Level 0.5
+At dose level 0.5, we calculate the confidence interval of the mean difference between OJ and VC (OJ - VC).
+
+```{r}
+OJmean <- subset(TGstats,dose==0.5 & supp=='OJ')$mean
+VCmean <- subset(TGstats,dose==0.5 & supp=='VC')$mean
+md <- OJmean - VCmean
+sd1 <- subset(TGstats,dose==0.5 & supp=='OJ')$sd
+sd2 <- subset(TGstats,dose==0.5 & supp=='VC')$sd
+n1 <- n2 <- 10
+df <- (sd1^2/n1 + sd2^2/n2)^2 / (((sd1^2/n1)^2/(n1-1)) + ((sd2^2/n2)/(n2-1)))
+tdf <- qt(0.975,df)
+tConf05 <- md + c(-1,1)*tdf*(sd1^2/n1 + sd2^2/n2)^0.5
+```
+
+The 95% confidence interval for dose level 0.5 is `r round(tConf05,2)`. Because the entire interval lies above 0, **we conclude that OJ is a more effective supplement** at this dose level.
+
+```{r}
+OJmean <- subset(TGstats,dose==1.0 & supp=='OJ')$mean
+VCmean <- subset(TGstats,dose==1.0 & supp=='VC')$mean
+md <- OJmean - VCmean
+sd1 <- subset(TGstats,dose==1.0 & supp=='OJ')$sd
+sd2 <- subset(TGstats,dose==1.0 & supp=='VC')$sd
+n1 <- n2 <- 10
+df <- (sd1^2/n1 + sd2^2/n2)^2 / (((sd1^2/n1)^2/(n1-1)) + ((sd2^2/n2)/(n2-1)))
+tdf <- qt(0.975,df)
+tConf1 <- md + c(-1,1)*tdf*(sd1^2/n1 + sd2^2/n2)^0.5
+```
+
+The 95% confidence interval for dose level 1.0 is `r round(tConf1,2)`. Because the entire interval lies above 0, **we conclude that OJ is a more effective supplement** at this dose level.
+
+```{r}
+OJmean <- subset(TGstats,dose==2.0 & supp=='OJ')$mean
+VCmean <- subset(TGstats,dose==2.0 & supp=='VC')$mean
+md <- OJmean - VCmean
+sd1 <- subset(TGstats,dose==2.0 & supp=='OJ')$sd
+sd2 <- subset(TGstats,dose==2.0 & supp=='VC')$sd
+n1 <- n2 <- 10
+df <- (sd1^2/n1 + sd2^2/n2)^2 / (((sd1^2/n1)^2/(n1-1)) + ((sd2^2/n2)/(n2-1)))
+tdf <- qt(0.975,df)
+tConf2 <- md + c(-1,1)*tdf*(sd1^2/n1 + sd2^2/n2)^0.5
+```
+
+The 95% confidence interval for dose level 2.0 is `r round(tConf2,2)`. Because the interval includes 0, **we cannot conclude that OJ is a more effective supplement at this dose level, nor can we conclude the opposite**.
