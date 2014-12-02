@@ -1,4 +1,5 @@
 # Statistical Inferencing Project - Nov 2014 - Henry Bowers
+setwd("~/Projects/StatisticalInferencing/StatisticalInference")
 
 setwd("~/R-projects/StatisticalInference/StatisticalInference")
 
